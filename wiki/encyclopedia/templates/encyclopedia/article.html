@@ -3,8 +3,10 @@
 {% block title %} {{article_title}} {% endblock %}
 
 {% block body %}
-  <h1>{{article_title}}</h1>
   <div>
-    {{article_content}}
+    {{article_content | safe}}
+  </div>
+  <div id="edit-div">
+    <a href="{% url 'edit' %}?article_title={{ article_title|urlencode }}">Edit article</a>
   </div>
 {% endblock %}
