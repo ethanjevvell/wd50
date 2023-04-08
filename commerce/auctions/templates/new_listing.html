@@ -1,0 +1,9 @@
+{% extends "auctions/layout.html" %} {% block body %}
+
+<h1>New listing</h1>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>
+
+{% endblock %}
