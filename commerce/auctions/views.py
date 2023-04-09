@@ -104,10 +104,10 @@ def new_listing(request):
             imageURL = form.cleaned_data["imageURL"]
 
             # Create instance of Listing model; save to db
-            listing = Listing(title=title, category=category, startingBid=startingBid, description=description, imageURL=imageURL)
+            listing = Listing(title=title, category=category, startingBid=startingBid, description=description, imageURL=imageURL, creator=request.user)
             listing.save()
 
     else:
         form = NewListingForm()
 
-    return render(request, "new_listing.html", {"form": form})
+    return render(request, "auctions/new_listing.html", {"form": form})

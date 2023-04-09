@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
 from urllib.parse import quote
 
 # First value in tuple is what's sent to db; second is what user sees
@@ -18,6 +19,7 @@ class Listing(models.Model):
     postedTime = models.DateField(auto_now_add=True)
     startingBid = models.PositiveIntegerField()
     imageURL = models.URLField(max_length=300)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="created_listings")
 
 class User(AbstractUser):
     watchlist = models.ManyToManyField(Listing, related_name="watched_by", blank=True)
