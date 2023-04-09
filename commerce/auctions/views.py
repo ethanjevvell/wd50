@@ -65,6 +65,12 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+def view_listing(request, listingID):
+    listing = Listing.objects.filter(pk=listingID).first()
+    return render(request, "auctions/listing.html", {
+        "listing": listing
+    })
+
 
 def new_listing(request):
 
