@@ -11,9 +11,6 @@ CATEGORIES = [
         ('Other', 'Other'),
     ]
 
-class User(AbstractUser):
-    pass
-
 class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.TextField()
@@ -21,6 +18,9 @@ class Listing(models.Model):
     postedTime = models.DateField(auto_now_add=True)
     startingBid = models.PositiveIntegerField()
     imageURL = models.URLField(max_length=300)
+
+class User(AbstractUser):
+    watchlist = models.ManyToManyField(Listing, related_name="watched_by", blank=True)
 
 class Bid(models.Model):
     user = models.CharField(max_length=64)

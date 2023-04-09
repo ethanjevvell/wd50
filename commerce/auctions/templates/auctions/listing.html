@@ -18,4 +18,19 @@
     <p>{{ listing.description }}</p>
   </div>
 </div>
+
+<form
+  class="listing-actions"
+  method="post"
+  action="{% url 'add_to_watchlist' %}"
+>
+  {% csrf_token %}
+  <input type="hidden" name="listing_id" value="{{ listing.id }}" />
+  {% if listing not in request.user.watchlist.all %}
+  <input type="submit" id="watchlist-button" value="Add to watchlist" />
+  {% else %}
+  <input type="submit" id="watchlist-button" value="Remove from watchlist" />
+  {% endif %}
+</form>
+
 {% endblock %}

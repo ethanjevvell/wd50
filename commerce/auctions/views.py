@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Listing
 from .forms import NewListingForm
@@ -66,14 +67,30 @@ def register(request):
         return render(request, "auctions/register.html")
 
 def view_listing(request, listingID):
+
     listing = Listing.objects.filter(pk=listingID).first()
     return render(request, "auctions/listing.html", {
         "listing": listing
     })
 
+@login_required
+def add_to_watchlist(request):
+    if request.method == "POST":
+        listingID = request.POST.get("listing_id")
+        listing = Listing.objects.get(pk=listingID)
+
+        if listing not in request.user.watchlist.all():
+            request.user.watchlist.add(listing)
+        else:
+            request.user.watchlist.remove(listing)
+
+        return redirect("view_listing", listingID=listingID)
+
+    else:
+        return redirect("index")
+
 
 def new_listing(request):
-
 
     if request.method == "POST":
         form = NewListingForm(request.POST)
