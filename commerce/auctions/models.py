@@ -12,6 +12,9 @@ CATEGORIES = [
         ('Other', 'Other'),
     ]
 
+class User(AbstractUser):
+    watchlist = models.ManyToManyField("Listing", related_name="watched_by", blank=True)
+
 class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.TextField()
@@ -19,14 +22,11 @@ class Listing(models.Model):
     postedTime = models.DateField(auto_now_add=True)
     startingBid = models.PositiveIntegerField()
     imageURL = models.URLField(max_length=300)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="created_listings")
-
-class User(AbstractUser):
-    watchlist = models.ManyToManyField(Listing, related_name="watched_by", blank=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_listings")
 
 class Bid(models.Model):
-    user = models.CharField(max_length=64)
-    itemSought = models.CharField(max_length=64)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+    listingID = models.ForeignKey(Listing, on_delete=models.CASCADE)
     bidAmount = models.PositiveIntegerField()
     postedTime = models.DateField(auto_now_add=True)
 

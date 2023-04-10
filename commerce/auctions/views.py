@@ -4,9 +4,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .models import Listing
+from django.utils import timezone
+from .models import Listing, Bid
 from .forms import NewListingForm
-
 
 def index(request):
     listings = Listing.objects.all()
@@ -66,12 +66,46 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 def view_listing(request, listingID):
 
     listing = Listing.objects.filter(pk=listingID).first()
     return render(request, "auctions/listing.html", {
         "listing": listing
     })
+
+
+def bid(request, status):
+
+    if request.method == "POST":
+        bid_amount = int(request.POST["bid_amount"])
+        listing_id = request.POST["listing_id"]
+
+        try:
+            listing_highest_bid = Bid.objects.filter(listingID=listing_id).order_by("bidAmount").first()["bidAmount"]
+        except:
+            listing_highest_bid = Listing.objects.filter(pk=listing_id).values("startingBid").first()["startingBid"]
+
+        user = request.user
+
+        if not bid_amount > listing_highest_bid:
+            return render(request, "auctions/bid.html", {
+                "status": 0
+            }) #TODO: Error for not bidding high enough
+
+        listing = Listing.objects.get(pk=listing_id)
+
+        bid = Bid(user=user, listingID=listing, bidAmount=bid_amount, postedTime=timezone.now())
+        bid.save()
+
+        listing.startingBid = bid_amount
+        listing.save()
+
+        return render(request, "auctions/bid.html", {
+            "status": 1
+        })
+
+
 
 @login_required
 def add_to_watchlist(request):
@@ -89,7 +123,7 @@ def add_to_watchlist(request):
     else:
         return redirect("index")
 
-
+@login_required
 def new_listing(request):
 
     if request.method == "POST":

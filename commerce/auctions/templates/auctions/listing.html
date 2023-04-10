@@ -19,6 +19,7 @@
   </div>
 </div>
 
+{% if user.is_authenticated %}
 <form
   class="listing-actions"
   method="post"
@@ -33,4 +34,16 @@
   {% endif %}
 </form>
 
-{% endblock %}
+<form class="bid-actions" method="post" action="{% url 'bid' status=1 %}">
+  {% csrf_token %}
+
+  <input type="hidden" name="listing_id" value="{{ listing.id }}" />
+  <input
+    type="number"
+    name="bid_amount"
+    id="bid-amount"
+    placeholder="Enter a bid"
+  />
+  <input type="submit" id="submit-bid" value="Submit bid" />
+</form>
+{% endif %} {% endblock %}
