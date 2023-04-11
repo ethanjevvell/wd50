@@ -46,4 +46,13 @@
   />
   <input type="submit" id="submit-bid" value="Submit bid" />
 </form>
+
+{% else %}
+
+<form class="listing-actions" method="post" action="{% url 'close' %}">
+  {% csrf_token %}
+  <input type="submit" id="close-bid" value="Close bid" />
+  <input type="hidden" name="listing_id" value="{{ listing.id }}" />
+</form>
+
 {% endif %} {% endblock %}
