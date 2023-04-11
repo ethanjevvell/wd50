@@ -68,12 +68,11 @@ def register(request):
 
 
 def view_listing(request, listingID):
-
     listing = Listing.objects.filter(pk=listingID).first()
     comments = Comment.objects.filter(listing=listingID)
     return render(request, "auctions/listing.html", {
         "listing": listing,
-        "comments": comments
+        "comments": comments,
     })
 
 
@@ -86,16 +85,7 @@ def comment(request):
         newComment = Comment(user=commentUser, commentBody=commentBody, listing=listing)
         newComment.save()
 
-    return redirect("index")
-
-
-def watchlist(request):
-
-    user_watchlist = request.user.watchlist.all()
-
-    return render(request, "auctions/watchlist.html", {
-        "watchlist": user_watchlist
-    })
+    return redirect(view_listing, listingID)
 
 
 def categories(request):
@@ -104,6 +94,7 @@ def categories(request):
         "categories": categories
     })
 
+
 def category(request, category_name):
     category_listings = Listing.objects.filter(category=category_name)
     return render(request, "auctions/category.html", {
@@ -111,6 +102,16 @@ def category(request, category_name):
         "listings": category_listings
     })
 
+@login_required
+def watchlist(request):
+
+    user_watchlist = request.user.watchlist.all()
+
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": user_watchlist
+    })
+
+@login_required
 def bid(request, status):
 
     if request.method == "POST":
@@ -141,12 +142,16 @@ def bid(request, status):
             "status": 1
         })
 
-
+@login_required
 def close(request):
 
     listing_id = int(request.POST["listing_id"])
     listing = Listing.objects.get(pk=listing_id)
-    winner = Bid.objects.filter(listingID=listing_id).order_by("-bidAmount").first().user
+    try:
+        winner = Bid.objects.filter(listingID=listing_id).order_by("-bidAmount").first().user
+    except:
+        return redirect(view_listing, listing_id)
+
     listing.winner = winner
     listing.save()
 
