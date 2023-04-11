@@ -19,7 +19,7 @@
   </div>
 </div>
 
-{% if user.is_authenticated %}
+{% if user.is_authenticated and listing not in user.created_listings.all %}
 <form
   class="listing-actions"
   method="post"

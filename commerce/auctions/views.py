@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
-from .models import Listing, Bid
+from .models import Listing, Bid, User
 from .forms import NewListingForm
 
 def index(request):
