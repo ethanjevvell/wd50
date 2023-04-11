@@ -32,6 +32,7 @@ class Bid(models.Model):
     postedTime = models.DateField(auto_now_add=True)
 
 class Comment(models.Model):
-    user = models.CharField(max_length=64)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     commentBody = models.TextField()
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
     postedTime = models.DateField(auto_now_add=True)

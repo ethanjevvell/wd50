@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
-from .models import Listing, Bid, User
+from .models import Listing, Bid, User, Comment
 from .forms import NewListingForm
 
 def index(request):
@@ -70,9 +70,23 @@ def register(request):
 def view_listing(request, listingID):
 
     listing = Listing.objects.filter(pk=listingID).first()
+    comments = Comment.objects.filter(listing=listingID)
     return render(request, "auctions/listing.html", {
-        "listing": listing
+        "listing": listing,
+        "comments": comments
     })
+
+
+def comment(request):
+    if request.method == "POST":
+        commentUser = request.user
+        commentBody = request.POST["comment_body"]
+        listingID = request.POST["listing_id"]
+        listing = Listing.objects.get(pk=listingID)
+        newComment = Comment(user=commentUser, commentBody=commentBody, listing=listing)
+        newComment.save()
+
+    return redirect("index")
 
 
 def bid(request, status):

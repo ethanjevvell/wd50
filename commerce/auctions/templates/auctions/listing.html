@@ -43,4 +43,15 @@
 <h1>listing sold, sorry</h1>
 {% endif %} {% if user.is_authenticated and listing.winner and listing.winner == user %}
 <h1>You won this listing!</h1>
-{% endif %} {% endblock %}
+{% endif %} {% if user.is_authenticated %}
+<form class="comment-form" method="post" action="{% url 'comment' %}">
+  {% csrf_token %}
+  <input type="hidden" name="listing_id" value="{{ listing.id }}" />
+  <input type="textarea" name="comment_body" id="comment-body" />
+</form>
+{% for comment in comments %}
+<div class="comment">
+  <h6>{{ comment.user }} — {{ comment.postedTime }}</h6>
+  <p>{{ comment.commentBody }}</p>
+</div>
+{% endfor %} {% endif %} {% endblock %}
