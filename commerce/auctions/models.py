@@ -23,6 +23,7 @@ class Listing(models.Model):
     startingBid = models.PositiveIntegerField()
     imageURL = models.URLField(max_length=300)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_listings")
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)

@@ -82,7 +82,7 @@ def bid(request, status):
         listing_id = request.POST["listing_id"]
 
         try:
-            listing_highest_bid = Bid.objects.filter(listingID=listing_id).order_by("bidAmount").first()["bidAmount"]
+            listing_highest_bid = Bid.objects.filter(listingID=listing_id).order_by("-bidAmount").first()["bidAmount"]
         except:
             listing_highest_bid = Listing.objects.filter(pk=listing_id).values("startingBid").first()["startingBid"]
 
@@ -106,6 +106,15 @@ def bid(request, status):
         })
 
 
+def close(request):
+
+    listing_id = int(request.POST["listing_id"])
+    listing = Listing.objects.get(pk=listing_id)
+    winner = Bid.objects.filter(listingID=listing_id).order_by("-bidAmount").first().user
+    listing.winner = winner
+    listing.save()
+
+    return render(request, "auctions/close.html")
 
 @login_required
 def add_to_watchlist(request):
@@ -138,7 +147,7 @@ def new_listing(request):
             imageURL = form.cleaned_data["imageURL"]
 
             # Create instance of Listing model; save to db
-            listing = Listing(title=title, category=category, startingBid=startingBid, description=description, imageURL=imageURL, creator=request.user)
+            listing = Listing(title=title, category=category, startingBid=startingBid, description=description, imageURL=imageURL, creator=request.user, winner=None)
             listing.save()
 
     else:
