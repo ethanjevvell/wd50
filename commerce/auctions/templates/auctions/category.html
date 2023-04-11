@@ -4,7 +4,7 @@
 {% for listing in listings %}
 <div class="listing">
   <div class="listing-title">
-    <strong> {{ listing.title }}: ${{ listing.startingBid|floatformat:2 }} </strong>
+    <a href="{% url 'view_listing' listingID=listing.pk %}"> {{ listing.title }}: ${{ listing.startingBid|floatformat:2 }} </a>
   </div>
   <div class="listing-body">
     {% if listing.imageURL %}
