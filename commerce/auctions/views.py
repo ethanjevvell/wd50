@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
-from .models import Listing, Bid, User, Comment
+from .models import Listing, Bid, User, Comment, CATEGORIES
 from .forms import NewListingForm
 
 def index(request):
@@ -88,6 +88,28 @@ def comment(request):
 
     return redirect("index")
 
+
+def watchlist(request):
+
+    user_watchlist = request.user.watchlist.all()
+
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": user_watchlist
+    })
+
+
+def categories(request):
+    categories = [cat[0] for cat in CATEGORIES]
+    return render(request, "auctions/categories.html", {
+        "categories": categories
+    })
+
+def category(request, category_name):
+    category_listings = Listing.objects.filter(category=category_name)
+    return render(request, "auctions/category.html", {
+        "category_name": category_name,
+        "listings": category_listings
+    })
 
 def bid(request, status):
 

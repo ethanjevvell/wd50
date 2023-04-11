@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %} {% load static %} {% block body %}
+
+<h1>{{ category_name }}</h1>
+{% for listing in listings %}
+<div class="listing">
+  <div class="listing-title">
+    <strong> {{ listing.title }}: ${{ listing.startingBid|floatformat:2 }} </strong>
+  </div>
+  <div class="listing-body">
+    {% if listing.imageURL %}
+    <img src="{{ listing.imageURL }}" width="50px" height="50px" />
+    {% else %}
+    <img src="{% static 'images/generic_no_image.jpg' %}" width="50px" height="50px" />
+    {% endif %}
+    <p>{{ listing.description }}</p>
+  </div>
+</div>
+{% endfor %} {% endblock %}
