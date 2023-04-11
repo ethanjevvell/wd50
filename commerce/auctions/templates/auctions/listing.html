@@ -39,6 +39,8 @@
   <input type="submit" id="close-bid" value="Close bid" />
   <input type="hidden" name="listing_id" value="{{ listing.id }}" />
 </form>
-{% endif %} {% if listing.winner %}
+{% endif %} {% if user.is_authenticated and listing.winner and user != listing.winner %}
 <h1>listing sold, sorry</h1>
+{% endif %} {% if user.is_authenticated and listing.winner and listing.winner == user %}
+<h1>You won this listing!</h1>
 {% endif %} {% endblock %}
