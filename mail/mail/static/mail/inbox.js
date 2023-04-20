@@ -119,7 +119,7 @@ function update_archived_status(id, archived) {
     body: JSON.stringify({
       archived: !archived,
     }),
-  }).then(console.log("Done"));
+  }).then(() => load_mailbox("inbox"));
 }
 
 function send_email(recipients, subject, body) {
