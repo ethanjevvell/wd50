@@ -1,3 +1,69 @@
-textarea {
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+
+  h2, h3, h4, h6 {
+    margin: 0;
+    margin-bottom: 10px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .btn {
+    cursor: pointer;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .email-entry {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 15px;
+  }
+
+  .email-entry:hover {
+    background-color: #e5e5e5;
+  }
+
+  .email-subject {
+    margin-bottom: 5px;
+  }
+
+  .email-sender, .email-timestamp {
+    margin-bottom: 0;
+  }
+
+  .email-timestamp {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #888;
+  }
+
+  #email-view {
+    display: none;
+  }
+
+  #emails-view {
+    display: none;
+  }
+
+  #compose-view {
+    display: none;
+  }
+
+  textarea {
     min-height: 400px;
-}
+  }

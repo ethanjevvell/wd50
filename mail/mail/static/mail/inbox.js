@@ -46,7 +46,7 @@ function load_mailbox(mailbox) {
       emails.forEach((email) => {
         formatted_email = create_email_element(email);
         if (email.read) {
-          formatted_email.style.backgroundColor = "grey";
+          formatted_email.style.backgroundColor = "lightgrey";
         }
 
         document.querySelector("#emails-view").append(formatted_email);
@@ -69,9 +69,10 @@ function show_email(id) {
     .then((response) => response.json())
     .then((email) => {
       const email_view = document.createElement("div");
-      const sender = document.createElement("h3");
-      const subject = document.createElement("h1");
-      const timestamp = document.createElement("h3");
+      email_view.classList.add("container");
+      const sender = document.createElement("h4");
+      const subject = document.createElement("h2");
+      const timestamp = document.createElement("h5");
       const body = document.createElement("p");
       const reply = document.createElement("button");
 
@@ -153,8 +154,8 @@ function send_email(recipients, subject, body) {
 // Generates email element to append to mailbox view
 function create_email_element(email) {
   const email_div = document.createElement("div");
-  const subject = document.createElement("h2");
-  const sender = document.createElement("h4");
+  const subject = document.createElement("h4");
+  const sender = document.createElement("h5");
   const timestamp = document.createElement("h6");
 
   email_div.classList.add("email-entry");
