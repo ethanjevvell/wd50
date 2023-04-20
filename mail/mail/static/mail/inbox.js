@@ -148,7 +148,8 @@ function send_email(recipients, subject, body) {
     .then((result) => {
       // Print result
       console.log(result);
-    });
+    })
+    .then(() => load_mailbox("sent"));
 }
 
 // Generates email element to append to mailbox view
