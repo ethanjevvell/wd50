@@ -46,7 +46,6 @@ function load_mailbox(mailbox) {
     .then((emails) => {
       emails.forEach((email) => {
         formatted_email = create_email_element(email);
-
         if (email.read) {
           formatted_email.style.backgroundColor = "grey";
         }
@@ -82,7 +81,24 @@ function show_email(id) {
       body.textContent = email.body;
 
       email_view.append(subject, sender, timestamp, body);
+      if (email.archived) {
+        console.log("Email is archived");
+        const unarchive = document.createElement("button");
+        unarchive.id = "archive-action";
+        unarchive.textContent = "Unarchive";
+        email_view.append(unarchive);
+      } else {
+        console.log("Email is NOT archived");
+        const archive = document.createElement("button");
+        archive.id = "archive-action";
+        archive.textContent = "Archive";
+        email_view.append(archive);
+      }
+
       document.querySelector("#email-view").append(email_view);
+      document.querySelector("#archive-action").addEventListener("click", (e) => {
+        update_archived_status(id, email.archived);
+      });
       mark_as_read(id);
     });
 }
@@ -94,6 +110,16 @@ function mark_as_read(id) {
       read: true,
     }),
   });
+}
+
+function update_archived_status(id, archived) {
+  console.log("Updating archive status");
+  fetch(`/emails/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      archived: !archived,
+    }),
+  }).then(console.log("Done"));
 }
 
 function send_email(recipients, subject, body) {
