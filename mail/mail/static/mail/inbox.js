@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector("#inbox").addEventListener("click", () => load_mailbox("inbox"));
   document.querySelector("#sent").addEventListener("click", () => load_mailbox("sent"));
   document.querySelector("#archived").addEventListener("click", () => load_mailbox("archive"));
-  document.querySelector("#compose").addEventListener("click", compose_email);
+  document.querySelector("#compose").addEventListener("click", () => compose_email());
 
   // By default, load the inbox
   load_mailbox("inbox");
@@ -18,16 +18,15 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function compose_email() {
+function compose_email(recipient = "", subject = "", body = "") {
   // Show compose view and hide other views
   document.querySelector("#compose-view").style.display = "block";
   document.querySelector("#emails-view").style.display = "none";
   document.querySelector("#email-view").style.display = "none";
 
-  // Clear out composition fields
-  document.querySelector("#compose-recipients").value = "";
-  document.querySelector("#compose-subject").value = "";
-  document.querySelector("#compose-body").value = "";
+  document.querySelector("#compose-recipients").value = recipient;
+  document.querySelector("#compose-subject").value = subject;
+  document.querySelector("#compose-body").value = body;
 }
 
 function load_mailbox(mailbox) {
@@ -74,13 +73,16 @@ function show_email(id) {
       const subject = document.createElement("h1");
       const timestamp = document.createElement("h3");
       const body = document.createElement("p");
+      const reply = document.createElement("button");
 
       subject.textContent = email.subject;
       sender.textContent = email.sender;
       timestamp.textContent = email.timestamp;
       body.textContent = email.body;
+      reply.textContent = "Reply";
 
-      email_view.append(subject, sender, timestamp, body);
+      email_view.append(subject, sender, timestamp, body, reply);
+
       if (email.archived) {
         console.log("Email is archived");
         const unarchive = document.createElement("button");
@@ -96,9 +98,19 @@ function show_email(id) {
       }
 
       document.querySelector("#email-view").append(email_view);
+
       document.querySelector("#archive-action").addEventListener("click", (e) => {
         update_archived_status(id, email.archived);
       });
+
+      reply.addEventListener("click", (e) => {
+        compose_email(
+          email.sender,
+          `Re: ${email.subject}`,
+          `On ${email.timestamp} ${email.sender} wrote: ${email.body}`
+        );
+      });
+
       mark_as_read(id);
     });
 }
