@@ -1,11 +1,17 @@
-<!-- network/post.html -->
-
 {% with user.is_authenticated as is_authenticated %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     if ("{{ is_authenticated }}" === "True") {
-      document.querySelector(".like-btn").addEventListener("click", likePost);
-      document.querySelector(".edit-btn").addEventListener("click", handleEditClick);
+      var likeButtons = document.querySelectorAll(".like-btn");
+      var editButtons = document.querySelectorAll(".edit-btn");
+
+      likeButtons.forEach((button) => {
+        button.addEventListener("click", likePost);
+      });
+
+      editButtons.forEach((button) => {
+        button.addEventListener("click", handleEditClick);
+      });
     }
   });
 
