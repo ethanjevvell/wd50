@@ -1,0 +1,71 @@
+.post p {
+  text-align: center;
+  padding: 10px;
+  }
+
+  /* Add a border and some padding to the post container */
+  .post {
+  border: 1px solid black;
+  padding: 10px;
+  margin-bottom: 10px;
+  }
+
+  /* Style the post author name */
+  .post h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  }
+
+  /* Style the post date */
+  .post .post-date {
+  font-style: italic;
+  font-size: 12px;
+  margin-top: 5px;
+  }
+
+  /* Style the like button */
+  .like-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  }
+
+  /* Style the edit button */
+  .edit-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  }
+
+  /* Style the like count */
+  .post-likes {
+  font-size: 12px;
+  margin-top: 5px;
+  }
+
+  /* Style the follow button */
+  .follow-btn {
+  background-color: #008CBA;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  }
+
+  /* Style the unfollow button */
+  .unfollow-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  }

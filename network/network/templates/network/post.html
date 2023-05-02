@@ -1,0 +1,106 @@
+<!-- network/post.html -->
+
+{% with user.is_authenticated as is_authenticated %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if ("{{ is_authenticated }}" === "True") {
+      document.querySelector(".like-btn").addEventListener("click", likePost);
+      document.querySelector(".edit-btn").addEventListener("click", handleEditClick);
+    }
+  });
+
+  function likePost(event) {
+    const postId = event.target.dataset.postId;
+    // Access the post div and CSRF token from the hidden input in the same post div
+    var postDiv = event.target.closest(".post");
+    var csrfToken = postDiv.querySelector("input[name='csrfmiddlewaretoken']").value;
+    fetch(`/like_post/${postId}/`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfToken,
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  function handleEditClick(event) {
+    event.preventDefault();
+    var postDiv = event.target.closest(".post");
+    var postContent = postDiv.querySelector("#post-content");
+    var postText = postContent.textContent;
+    // Replace post content with a textarea
+    var textarea = document.createElement("textarea");
+    textarea.value = postText;
+    textarea.classList.add("form-control");
+    postContent.replaceWith(textarea);
+    // Change "edit" button to "save" button
+    var editButton = event.target;
+    editButton.classList.remove("btn-primary");
+    editButton.classList.add("btn-success");
+    editButton.textContent = "Save";
+    editButton.removeEventListener("click", handleEditClick);
+    editButton.addEventListener("click", handleSaveClick);
+  }
+
+  function handleSaveClick(event) {
+    event.preventDefault();
+    var postDiv = event.target.closest(".post");
+    var postContent = postDiv.querySelector("textarea");
+    var newContent = postContent.value;
+    var postID = postDiv.getAttribute("data-post-id");
+    // Access the CSRF token from the hidden input in the same post div
+    var csrfToken = postDiv.querySelector("input[name='csrfmiddlewaretoken']").value;
+
+    // Send POST request to server to save new content
+    fetch("/edit_post/" + postID + "/", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: newContent }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.text();
+        } else {
+          console.log("Error saving post content");
+        }
+      })
+      .then(function (text) {
+        // Replace textarea with new post content
+        var newPostContent = document.createElement("p");
+        newPostContent.id = "post-content";
+        newPostContent.textContent = newContent;
+        postContent.replaceWith(newPostContent);
+        // Change "save" button back to "edit" button
+        var saveButton = event.target;
+        saveButton.classList.remove("btn-success");
+        saveButton.classList.add("btn-primary");
+        saveButton.textContent = "Edit";
+        saveButton.removeEventListener("click", handleSaveClick);
+        saveButton.addEventListener("click", handleEditClick);
+      });
+  }
+</script>
+{% endwith %}
+
+<div class="post" data-post-id="{{ post.id }}">
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+
+  <h3><a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a></h3>
+  <p id="post-content">{{ post.content }}</p>
+  <p class="post-date">{{ post.timestamp|date:"F j, Y, P" }}</p>
+  <div class="post-likes"><span class="like-count">{{ post.likes.count }}</span> likes</div>
+  <button class="btn btn-primary like-btn" data-post-id="{{ post.id }}">Like</button>
+  {% if request.user == post.user %}
+  <a class="btn btn-primary edit-btn">Edit</a>
+  {% endif %}
+</div>

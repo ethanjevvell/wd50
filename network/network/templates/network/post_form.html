@@ -1,0 +1,13 @@
+{% if user.is_authenticated %}
+<div class="new-post-form">
+  <form id="new-post-form">
+    <textarea
+      id="new-post-text"
+      rows="4"
+      cols="50"
+      placeholder="Write your post here..."
+    ></textarea>
+    <button type="submit">Post</button>
+  </form>
+</div>
+{% endif %}
